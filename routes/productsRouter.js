@@ -5,7 +5,20 @@ const router = express.Router()
 router.get('/', (req, res) => {
     res.json(products)
 })
+router.get('/filters', (req, res) => {
+    const { categoria, nombre } = req.query
+    if (!categoria && !nombre) {
+        return res.status(400).send('We need at least one filter.')
+    }
 
+    const newProducts = products.filter(product => {
+        return product.categoria === categoria || !categoria && (
+            product.nombre === nombre || !nombre
+        )
+    })
+
+    return res.json(newProducts)
+})
 router.get('/:id', (req, res) => {
     const { id } = req.params;
     if (!id) {
