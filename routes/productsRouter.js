@@ -1,5 +1,7 @@
 const express = require('express')
 const products = require('../products')
+const productSchema = require('../schemas/ProductSchema')
+const validateData = require('../middlewares/validateData')
 const router = express.Router()
 
 router.get('/', (req, res) => {
@@ -33,7 +35,9 @@ router.get('/:id', (req, res) => {
     res.json(product)
 })
 
-router.post('/', (req, res) => {
+router.post('/', 
+    validateData(productSchema, 'body'),
+    (req, res) => {
     const { nombre, precio, categoria } = req.body;
     if (!nombre || !precio || !categoria) {
         return res.status(400).send('Bad request')
